@@ -27,7 +27,7 @@
 DECLARE_GLOBAL_DATA_PTR;
 
 #define	MUX_CONFIG_GPMI	(MXS_PAD_3V3 | MXS_PAD_12MA | MXS_PAD_NOPULL)
-#define MUX_CONFIG_GPIO	(MXS_PAD_3V3 | MXS_PAD_4MA | MXS_PAD_NOPULL)
+#define MUX_CONFIG_GPIO			(MXS_PAD_3V3 | MXS_PAD_4MA | MXS_PAD_NOPULL)
 
 /*
  * Functions
@@ -42,20 +42,20 @@ int board_early_init_f(void)
 	mxs_set_ioclk(MXC_IOCLK1, 480000);
 
 	// router 0046.1 & 0046.2 (all below) // see spl_boot.clock // VOVS
-	//mxs_iomux_setup_pad (MX28_PAD_SSP3_SS0__GPIO_2_27 | MUX_CONFIG_GPIO);
-	//gpio_direction_output (MX28_PAD_SSP3_SS0__GPIO_2_27, 0);
-	//mxs_iomux_setup_pad (MX28_PAD_SSP0_DETECT__GPIO_2_9 | MUX_CONFIG_GPIO);
-	//gpio_direction_output (MX28_PAD_SSP0_DETECT__GPIO_2_9, 1);
-	//mxs_iomux_setup_pad (MX28_PAD_SSP3_MISO__GPIO_2_26 | MUX_CONFIG_GPIO);
-	//gpio_direction_output (MX28_PAD_SSP3_MISO__GPIO_2_26, 1);
-	//mxs_iomux_setup_pad (MX28_PAD_PWM3__GPIO_3_28 | MUX_CONFIG_GPIO);
-	//gpio_direction_output (MX28_PAD_PWM3__GPIO_3_28, 0);
-	//mxs_iomux_setup_pad (MX28_PAD_PWM4__GPIO_3_29 | MUX_CONFIG_GPIO);
-	//gpio_direction_output (MX28_PAD_PWM4__GPIO_3_29, 1);
-	//mxs_iomux_setup_pad (MX28_PAD_SSP2_SS0__GPIO_2_19 | MUX_CONFIG_GPIO);
-	//gpio_direction_output (MX28_PAD_SSP2_SS0__GPIO_2_19, 1);
-	//mxs_iomux_setup_pad (MX28_PAD_SSP0_DATA5__GPIO_2_5 | MUX_CONFIG_GPIO);
-	//gpio_direction_output (MX28_PAD_SSP0_DATA5__GPIO_2_5, 0);
+	mxs_iomux_setup_pad (MX28_PAD_SSP3_SS0__GPIO_2_27 | MUX_CONFIG_GPIO);
+	gpio_direction_output (MX28_PAD_SSP3_SS0__GPIO_2_27, 0);
+	mxs_iomux_setup_pad (MX28_PAD_SSP0_DETECT__GPIO_2_9 | MUX_CONFIG_GPIO);
+	gpio_direction_output (MX28_PAD_SSP0_DETECT__GPIO_2_9, 1);
+	mxs_iomux_setup_pad (MX28_PAD_SSP3_MISO__GPIO_2_26 | MUX_CONFIG_GPIO);
+	gpio_direction_output (MX28_PAD_SSP3_MISO__GPIO_2_26, 1);
+	mxs_iomux_setup_pad (MX28_PAD_PWM3__GPIO_3_28 | MUX_CONFIG_GPIO);
+	gpio_direction_output (MX28_PAD_PWM3__GPIO_3_28, 0);
+	mxs_iomux_setup_pad (MX28_PAD_PWM4__GPIO_3_29 | MUX_CONFIG_GPIO);
+	gpio_direction_output (MX28_PAD_PWM4__GPIO_3_29, 1);
+	mxs_iomux_setup_pad (MX28_PAD_SSP2_SS0__GPIO_2_19 | MUX_CONFIG_GPIO);
+	gpio_direction_output (MX28_PAD_SSP2_SS0__GPIO_2_19, 1);
+	mxs_iomux_setup_pad (MX28_PAD_SSP0_DATA5__GPIO_2_5 | MUX_CONFIG_GPIO);
+	gpio_direction_output (MX28_PAD_SSP0_DATA5__GPIO_2_5, 0);
 
 	/* SSP0 clock at 96MHz */
 //	mxs_set_sspclk(MXC_SSPCLK0, 96000, 0);
