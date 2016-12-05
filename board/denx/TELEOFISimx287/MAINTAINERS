@@ -1,0 +1,6 @@
+TELEOFISimx287 BOARD
+M:	Marek Vasut <marek.vasut@gmail.com>
+S:	Maintained
+F:	board/denx/TELEOFISimx287/
+F:	include/configs/TELEOFISimx287.h
+F:	configs/TELEOFISimx287_defconfig
