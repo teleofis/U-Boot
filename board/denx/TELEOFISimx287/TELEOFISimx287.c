@@ -40,25 +40,26 @@ int board_early_init_f(void)
 	mxs_set_ioclk(MXC_IOCLK0, 480000);
 	/* IO1 clock at 480MHz */
 	mxs_set_ioclk(MXC_IOCLK1, 480000);
-
-	// router 0046.1 & 0046.2 (all below) // see spl_boot.clock // VOVS
-	//mxs_iomux_setup_pad (MX28_PAD_SSP3_SS0__GPIO_2_27 | MUX_CONFIG_GPIO);
-	//gpio_direction_output (MX28_PAD_SSP3_SS0__GPIO_2_27, 0);
-	//mxs_iomux_setup_pad (MX28_PAD_SSP0_DETECT__GPIO_2_9 | MUX_CONFIG_GPIO);
-	//gpio_direction_output (MX28_PAD_SSP0_DETECT__GPIO_2_9, 1);
-	//mxs_iomux_setup_pad (MX28_PAD_SSP3_MISO__GPIO_2_26 | MUX_CONFIG_GPIO);
-	//gpio_direction_output (MX28_PAD_SSP3_MISO__GPIO_2_26, 1);
-	//mxs_iomux_setup_pad (MX28_PAD_PWM3__GPIO_3_28 | MUX_CONFIG_GPIO);
-	//gpio_direction_output (MX28_PAD_PWM3__GPIO_3_28, 0);
-	//mxs_iomux_setup_pad (MX28_PAD_PWM4__GPIO_3_29 | MUX_CONFIG_GPIO);
-	//gpio_direction_output (MX28_PAD_PWM4__GPIO_3_29, 1);
-	//mxs_iomux_setup_pad (MX28_PAD_SSP2_SS0__GPIO_2_19 | MUX_CONFIG_GPIO);
-	//gpio_direction_output (MX28_PAD_SSP2_SS0__GPIO_2_19, 1);
-	//mxs_iomux_setup_pad (MX28_PAD_SSP0_DATA5__GPIO_2_5 | MUX_CONFIG_GPIO);
-	//gpio_direction_output (MX28_PAD_SSP0_DATA5__GPIO_2_5, 0);
-
+	// LED.TOP
+	mxs_iomux_setup_pad (MX28_PAD_SSP0_DATA3__GPIO_2_3 | MUX_CONFIG_GPIO);
+	gpio_direction_output (MX28_PAD_SSP0_DATA3__GPIO_2_3, 1);
+	// LED.MID
+	mxs_iomux_setup_pad (MX28_PAD_SSP0_CMD__GPIO_2_8 | MUX_CONFIG_GPIO);
+	gpio_direction_output (MX28_PAD_SSP0_CMD__GPIO_2_8, 1);
+	// LED.BOT
+	mxs_iomux_setup_pad (MX28_PAD_SSP0_DETECT__GPIO_2_9 | MUX_CONFIG_GPIO);
+	gpio_direction_output (MX28_PAD_SSP0_DETECT__GPIO_2_9, 1);
+	//GSM.SIMDET
+	mxs_iomux_setup_pad (MX28_PAD_SSP1_DATA0__GPIO_2_14 | MUX_CONFIG_GPIO);
+	gpio_direction_output (MX28_PAD_SSP1_DATA0__GPIO_2_14, 0);
+	//GSM.PWRKEY
+	mxs_iomux_setup_pad (MX28_PAD_SSP2_MOSI__GPIO_2_17 | MUX_CONFIG_GPIO);
+	gpio_direction_output (MX28_PAD_SSP2_MOSI__GPIO_2_17, 0);
+	//GSM.VCCEN#
+	mxs_iomux_setup_pad (MX28_PAD_SSP2_SS0__GPIO_2_19 | MUX_CONFIG_GPIO);
+	gpio_direction_output (MX28_PAD_SSP2_SS0__GPIO_2_19, 1);
 	/* SSP0 clock at 96MHz */
-//	mxs_set_sspclk(MXC_SSPCLK0, 96000, 0);
+	//mxs_set_sspclk(MXC_SSPCLK0, 96000, 0);
 	/* SSP2 clock at 160MHz */
 //	mxs_set_sspclk(MXC_SSPCLK2, 160000, 0);
 

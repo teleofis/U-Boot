@@ -18,7 +18,7 @@
 #define CONFIG_IDENT_STRING ""
 #endif
 
-#define U_BOOT_VERSION_STRING "U-Boot 2014.10 Build TELEOFIS 2.0.0" CONFIG_IDENT_STRING
+#define U_BOOT_VERSION_STRING "U-Boot 2014.10 Build TELEOFIS 2.1.0" CONFIG_IDENT_STRING
 
 #ifndef __ASSEMBLY__
 extern const char version_string[];
