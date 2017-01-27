@@ -50,8 +50,8 @@ int board_early_init_f(void)
 	mxs_iomux_setup_pad (MX28_PAD_SSP0_DETECT__GPIO_2_9 | MUX_CONFIG_GPIO);
 	gpio_direction_output (MX28_PAD_SSP0_DETECT__GPIO_2_9, 1);
 	//GSM.SIMDET
-	mxs_iomux_setup_pad (MX28_PAD_SSP1_DATA0__GPIO_2_14 | MUX_CONFIG_GPIO);
-	gpio_direction_output (MX28_PAD_SSP1_DATA0__GPIO_2_14, 0);
+	//mxs_iomux_setup_pad (MX28_PAD_SSP1_DATA0__GPIO_2_14 | MUX_CONFIG_GPIO);
+	//gpio_direction_output (MX28_PAD_SSP1_DATA0__GPIO_2_14, 0);
 	//GSM.PWRKEY
 	mxs_iomux_setup_pad (MX28_PAD_SSP2_MOSI__GPIO_2_17 | MUX_CONFIG_GPIO);
 	gpio_direction_output (MX28_PAD_SSP2_MOSI__GPIO_2_17, 0);
