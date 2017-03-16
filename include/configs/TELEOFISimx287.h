@@ -148,6 +148,7 @@
 		"setexpr update_off ${loadaddr} + ${update_nand_fcb} ; " \
 		"setexpr update_sz ${filesize} - ${update_nand_fcb} ; " \
 		"nand write ${update_off} ${update_nand_fcb} ${update_sz} ; " \
+		"saveenv ; "													\
 		"fi\0"																\
 	"update_fs="															\
 		"if tftp 0x42000000 rootfs.img ; then "				\
