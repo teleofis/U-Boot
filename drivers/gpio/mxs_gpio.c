@@ -12,6 +12,7 @@
 #include <asm/errno.h>
 #include <asm/io.h>
 #include <asm/arch/iomux.h>
+#include <asm/arch/clock.h>
 #include <asm/arch/imx-regs.h>
 
 #if	defined(CONFIG_MX23)
@@ -99,6 +100,14 @@ int gpio_direction_output(unsigned gpio, int value)
 
 	writel(1 << PAD_PIN(gpio), &reg->reg_set);
 
+	return 0;
+}
+
+int gpio_toggle(unsigned gpio)
+{
+	int val;
+	val=gpio_get_value(gpio);
+	gpio_direction_output (gpio, !val);
 	return 0;
 }
 

@@ -72,7 +72,10 @@
 #define CONFIG_FEC_MXC		
 #endif
 
-
+/* HW Watchdog*/
+#define CONFIG_HW_WATCHDOG
+#define CONFIG_GPIO_WDT
+#define WDGRES_PIN					MX28_PAD_LCD_D13__GPIO_1_13
 /* RTC */
 #ifdef CONFIG_CMD_DATE
 /* Use the internal RTC in the MXS chip */

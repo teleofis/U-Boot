@@ -21,6 +21,7 @@
 #include <asm/arch/regs-base.h>
 #include <asm/arch/regs-uartapp.h>
 #include <asm/arch/sys_proto.h>
+#include <watchdog.h>
 
 DECLARE_GLOBAL_DATA_PTR;
 
@@ -121,10 +122,16 @@ static int mxs_auart_tstc(void)
 
 static int mxs_auart_getc(void)
 {
+	int i=0;
+
 	struct mxs_uartapp_regs *regs = get_uartapp_registers();
 	/* Wait until a character is available to read */
-	while (!mxs_auart_tstc())
-		;
+	while (!mxs_auart_tstc()){
+		if (i++ > 1000000) {
+		WATCHDOG_RESET();
+		i=0;
+		}
+	}
 	/* Read the character from the data register */
 	return readl(&regs->hw_uartapp_data) & 0xFF;
 }
