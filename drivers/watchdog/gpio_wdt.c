@@ -19,7 +19,7 @@ void hw_watchdog_reset(void)
 		
 		gpio_toggle(WDGRES_PIN);
 	}else{
-		gpio_direction_output (WDGRES_PIN, 1);
+		gpio_direction_output (WDGRES_PIN, 0);
 	}
 }
 
