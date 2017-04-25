@@ -17,6 +17,7 @@ DECLARE_GLOBAL_DATA_PTR;
 /*
  * Board-specific Platform code can reimplement show_boot_progress () if needed
  */
+extern int reset_button_status(void);
 __weak void show_boot_progress(int val) {}
 
 static void modem_init(void)
@@ -30,6 +31,13 @@ static void modem_init(void)
 		mdm_init(); /* wait for modem connection */
 	}
 #endif  /* CONFIG_MODEM_SUPPORT */
+}
+
+static int cmd_exec(const char* command)
+{
+debug("Run \"%s\":\n",command);
+
+	return (run_command(command,0) >= 0);
 }
 
 static void run_preboot_environment_command(void)
@@ -58,6 +66,9 @@ void main_loop(void)
 	const char *s;
 
 	bootstage_mark_name(BOOTSTAGE_ID_MAIN_LOOP, "main_loop");
+
+	if (reset_button_status())
+		cmd_exec("run factory_reset");
 
 #ifndef CONFIG_SYS_GENERIC_BOARD
 	puts("Warning: Your board does not use generic board. Please read\n");

@@ -188,6 +188,12 @@ int dram_init(void)
 	return mxs_dram_init();
 }
 
+int reset_button_status(void){
+	
+	mxs_iomux_setup_pad (MX28_PAD_LCD_D15__GPIO_1_15 | MUX_CONFIG_GPIO);
+	return gpio_get_value(MX28_PAD_LCD_D15__GPIO_1_15);
+}
+
 int board_init(void)
 {
 	/* Adress of boot parameters */
