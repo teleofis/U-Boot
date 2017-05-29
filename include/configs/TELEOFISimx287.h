@@ -159,7 +159,8 @@
 		"nand erase.part root ; "										\
 		"ubi part root ; "												\
 		"ubi create rootfs 0x2A00000 ; "								\
-		"ubi create rootfs_data ; "										\
+		"ubi create rootfs_data 0x1E00000 ; "							\
+		"ubi create extra_ubi ; "										\
 		"ubi write 0x42000000 rootfs ${filesize_rootfs} ; "				\
 		"nand erase.part updroot ; "									\
 		"nand write 0x42000000 updroot ${filesize_rootfs} ; "			\
@@ -189,11 +190,18 @@
 		"nand erase.part root ; "								\
 		"ubi part root ; "										\
 		"ubi create rootfs 0x2A00000 ; "						\
-		"ubi create rootfs_data ; "								\
+		"ubi create rootfs_data 0x1E00000 ; "					\
+		"ubi create extra_ubi ; "								\
 		"ubi write ${loadaddr} rootfs ${filesize_rootfs} \0"	\
-	"autoupgrade="					\
-		"run factory_reset; "		\
-		"saveenv\0"					\
+	"autoupgrade="												\
+		"nand read ${loadaddr} updroot ${filesize_rootfs} ; "	\
+		"ubi part root ; "										\
+		"ubi remove rootfs ; "									\
+		"ubi remove rootfs_data ; "								\
+		"ubi create rootfs 0x2A00000 ; "						\
+		"ubi create rootfs_data 0x1E00000 ; "					\
+		"ubi write ${loadaddr} rootfs ${filesize_rootfs} ; "	\
+		"saveenv\0"												\
 	"nand_boot="											\
 		"if itest ${update_flag} == 15963 ; then "			\
 			"run autoupgrade;" 								\
