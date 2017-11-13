@@ -12,14 +12,22 @@
 
 #ifdef CONFIG_GPIO_WDT
 static int watchdog_toggle=1;
+static int count_off=0;
+
 void hw_watchdog_reset(void)
 {
 	mxs_iomux_setup_pad (WDGRES_PIN | MXS_PAD_3V3 | MXS_PAD_4MA | MXS_PAD_NOPULL);
 	if (watchdog_toggle) {
 		
 		gpio_toggle(WDGRES_PIN);
+		count_off =0;
 	}else{
-		gpio_direction_output (WDGRES_PIN, 0);
+		if (count_off<10)
+			count_off++;
+		if(count_off == 5)
+			gpio_toggle(WDGRES_PIN);
+		if(count_off == 10)
+			gpio_direction_output (WDGRES_PIN, 0);
 	}
 }
 
