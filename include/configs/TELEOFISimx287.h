@@ -152,6 +152,14 @@
 		"setexpr update_sz ${filesize} - ${update_nand_fcb} ; " \
 		"nand write ${update_off} ${update_nand_fcb} ${update_sz} ; " \
 		"fi\0"																\
+	"erase_all="		/* Update FCB, DBBT and FW */	\
+		"if tftp zero.img ; then "		\
+		"run update_nand_get_fcb_size ; "			\
+		"nand write ${loadaddr} 0x0 ${filesize} ; "		\
+		"nand write ${loadaddr} 0x4000000 ${filesize} ; "		\
+		"nand write ${loadaddr} 0x8000000 ${filesize} ; "		\
+		"nand write ${loadaddr} 0xBF20000 ${filesize} ; "		\
+		"fi\0"																\
 	"update_fs="															\
 		"if tftp 0x42000000 rootfs.img ; then "				\
 		"setenv filesize_rootfs ${filesize} ; "							\
