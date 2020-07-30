@@ -134,6 +134,7 @@
 	"update_nand_full_filename=u-boot.nand\0"			\
 	"update_nand_stride=0x40\0"	/* MX28 datasheet ch. 12.12 */	\
 	"update_nand_count=0x4\0"	/* MX28 datasheet ch. 12.12 */	\
+	"filesize_rootfs=2000000\0"                                 \
 	"update_nand_get_fcb_size="	/* Get size of FCB blocks */	\
 		"nand device 0 ; "					\
 		"nand info ; "						\
@@ -194,14 +195,20 @@
 		"nand write ${loadaddr} ${bootloader} ${filesize} ; "			\
 		"saveenv\0"														\
 	"factory_reset="											\
+		"setenv update_flag 15964;"								\
+		"saveenv;"												\
 		"nand read ${loadaddr} updroot ${filesize_rootfs} ; "	\
 		"nand erase.part root ; "								\
 		"ubi part root ; "										\
 		"ubi create rootfs 0x2A00000 ; "						\
 		"ubi create rootfs_data 0x1E00000 ; "					\
 		"ubi create extra_ubi ; "								\
-		"ubi write ${loadaddr} rootfs ${filesize_rootfs} \0"	\
+		"ubi write ${loadaddr} rootfs ${filesize_rootfs} ; "	\
+		"setenv update_flag 110;" 								\
+		"saveenv\0"												\
 	"autoupgrade="												\
+		"setenv update_flag 15963;"								\
+		"saveenv;"												\
 		"nand read ${loadaddr} updroot ${filesize_rootfs} ; "	\
 		"ubi part root ; "										\
 		"ubi remove rootfs ; "									\
@@ -209,11 +216,17 @@
 		"ubi create rootfs 0x2A00000 ; "						\
 		"ubi create rootfs_data 0x1E00000 ; "					\
 		"ubi write ${loadaddr} rootfs ${filesize_rootfs} ; "	\
+		"setenv update_flag 111;" 								\
 		"saveenv\0"												\
 	"nand_boot="											\
 		"if itest ${update_flag} == 15963 ; then "			\
 			"run autoupgrade;" 								\
 			"setenv update_flag 111;" 						\
+			"saveenv ; "									\
+		"fi ;"												\
+		"if itest ${update_flag} == 15964 ; then "			\
+			"run factory_reset;" 							\
+			"setenv update_flag 110;" 						\
 			"saveenv ; "									\
 		"fi ;"												\
 		"nand read 0x41000000 fdt ${filesize_fdt} ;" 		\

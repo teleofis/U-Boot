@@ -70,9 +70,12 @@ void main_loop(void)
 
 	while(reset_button_status()){		
 		udelay(100000);
-		gpio_toggle(MX28_PAD_SSP0_DATA3__GPIO_2_3);
-		gpio_toggle(MX28_PAD_SSP0_CMD__GPIO_2_8);
-		gpio_toggle(MX28_PAD_SSP0_DETECT__GPIO_2_9);
+		if (counter < 30) {
+			gpio_toggle(MX28_PAD_SSP0_DATA3__GPIO_2_3);
+			gpio_toggle(MX28_PAD_SSP0_CMD__GPIO_2_8);
+			gpio_toggle(MX28_PAD_SSP0_DETECT__GPIO_2_9);
+		}
+
 		if (!reset_button_status()){
 			gpio_direction_output (MX28_PAD_SSP0_DATA3__GPIO_2_3, 1);
 			gpio_direction_output (MX28_PAD_SSP0_CMD__GPIO_2_8, 1);
@@ -80,9 +83,12 @@ void main_loop(void)
 			break;
 		}
 		counter++;
-		if (counter >= 30)
-			cmd_exec("run factory_reset");	
+		if (counter >= 80)
+			break;
 	}
+
+	if (counter >= 30 && counter < 80)
+			cmd_exec("run factory_reset");
 
 #ifndef CONFIG_SYS_GENERIC_BOARD
 	puts("Warning: Your board does not use generic board. Please read\n");
