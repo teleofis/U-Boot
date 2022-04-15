@@ -108,7 +108,7 @@
 
 
 		/*was ttyAMA0*/
-#define CONFIG_BOOTARGS		"console=ttyAPP4,115200 usbcore.autosuspend=-1 rootfstype=ubifs ubi.mtd=4 root=ubi0:rootfs rw mtdparts=gpmi-nand:5m(bootloader),256k(fdt),5m(kernel),42m(updroot),-(root)"
+#define CONFIG_BOOTARGS		"console=ttyAPP4,115200 usbcore.autosuspend=-1 rootfstype=ubifs ubi.mtd=1 root=ubi0:rootfs_a rw mtdparts=gpmi-nand:5m(bootloader),-(root)"
 #define CONFIG_BOOTCOMMAND	"run nand_boot"
 #define CONFIG_LOADADDR		0x42000000
 #define CONFIG_SYS_LOAD_ADDR	CONFIG_LOADADDR
@@ -122,14 +122,11 @@
 #define CONFIG_HOSTNAME		TELEOFISimx287
 
 /* all here ??? */
-#define CONFIG_EXTRA_ENV_SETTINGS					\
+#define CONFIG_EXTRA_ENV_SETTINGS			\
 	"mtdparts=mtdparts=gpmi-nand:"			\
 				"5m(bootloader),"			\
-				"256k(fdt),"				\
-				"5m(kernel),"				\
-				"42m(updroot),"				\
 				"-(root)\0"					\
-	"hostname=TELEOFISimx287\0"				\
+	"hostname=imx287\0"				\
 	"bootstopkey2=root\0"				\
 	"update_nand_full_filename=u-boot.nand\0"			\
 	"update_nand_stride=0x40\0"	/* MX28 datasheet ch. 12.12 */	\
@@ -160,78 +157,47 @@
 		"nand write ${loadaddr} 0x4000000 ${filesize} ; "		\
 		"nand write ${loadaddr} 0x8000000 ${filesize} ; "		\
 		"nand write ${loadaddr} 0xBF20000 ${filesize} ; "		\
-		"fi\0"																\
-	"update_fs="															\
-		"if tftp 0x42000000 rootfs.img ; then "				\
+		"fi\0"															\
+	"update_system="													\
+		"if tftp 0x42000000 root ; then "								\
 		"setenv filesize_rootfs ${filesize} ; "							\
 		"saveenv ; "													\
 		"nand erase.part root ; "										\
 		"ubi part root ; "												\
-		"ubi create rootfs 0x2A00000 ; "								\
+		"ubi create kernel_a 0x500000 ; "								\
+		"ubi create kernel_b 0x500000 ; "								\
+		"ubi create rootfs_a 0x2000000 ; "								\
+		"ubi create rootfs_b 0x2000000 ; " 								\
 		"ubi create rootfs_data 0x1E00000 ; "							\
 		"ubi create extra_ubi ; "										\
-		"ubi write 0x42000000 rootfs ${filesize_rootfs} ; "				\
-		"nand erase.part updroot ; "									\
-		"nand write 0x42000000 updroot ${filesize_rootfs} ; "			\
-		"fi\0"															\
-	"update_kernel="														\
-		"if tftp 0x42000000 openwrt-mxs-uImage ; then "		\
+		"ubi write 0x42000000 rootfs_a ${filesize_rootfs} ; "			\
+		"ubi write 0x42000000 rootfs_b ${filesize_rootfs} ; "			\
+		"fi ;"															\
+		"if tftp 0x42000000 kernel ; then "					\
 		"setenv filesize_kernel ${filesize} ; "							\
 		"saveenv ; "													\
-		"nand erase.part kernel ; "										\
-		"nand write 0x42000000 kernel ${filesize_kernel} ; "			\
+		"ubi part root ; "												\
+		"ubi write 0x42000000 kernel_a ${filesize_kernel} ; "			\
+		"ubi write 0x42000000 kernel_b ${filesize_kernel} ; "			\
 		"fi\0"															\
-	"update_fdt="															\
-		"if tftp 0x42000000 fdt.dtb ; then "		\
-		"setenv filesize_fdt ${filesize} ; "							\
-		"saveenv ; "													\
-		"nand erase.part fdt ; "										\
-		"nand write 0x42000000 fdt ${filesize_fdt} ; "					\
-		"fi\0"															\
-	"update_nand_bootandenv="	/* Update bootloader and environment VOVS*/	\
-		"if tftp ${loadaddr} ${update_nand_firmware_filename} ; then "	\
-		"nand erase.part ${bootloader}; "								\
-		"nand erase.part ${environment}; "								\
-		"nand write ${loadaddr} ${bootloader} ${filesize} ; "			\
-		"saveenv\0"														\
-	"factory_reset="											\
-		"setenv update_flag 15964;"								\
-		"saveenv;"												\
-		"nand read ${loadaddr} updroot ${filesize_rootfs} ; "	\
-		"nand erase.part root ; "								\
-		"ubi part root ; "										\
-		"ubi create rootfs 0x2A00000 ; "						\
-		"ubi create rootfs_data 0x1E00000 ; "					\
-		"ubi create extra_ubi ; "								\
-		"ubi write ${loadaddr} rootfs ${filesize_rootfs} ; "	\
-		"setenv update_flag 110;" 								\
-		"saveenv\0"												\
-	"autoupgrade="												\
-		"setenv update_flag 15963;"								\
-		"saveenv;"												\
-		"nand read ${loadaddr} updroot ${filesize_rootfs} ; "	\
-		"ubi part root ; "										\
-		"ubi remove rootfs ; "									\
-		"ubi remove rootfs_data ; "								\
-		"ubi create rootfs 0x2A00000 ; "						\
-		"ubi create rootfs_data 0x1E00000 ; "					\
-		"ubi write ${loadaddr} rootfs ${filesize_rootfs} ; "	\
-		"setenv update_flag 111;" 								\
-		"saveenv\0"												\
-	"nand_boot="											\
-		"if itest ${update_flag} == 15963 ; then "			\
-			"run autoupgrade;" 								\
-			"setenv update_flag 111;" 						\
-			"saveenv ; "									\
-		"fi ;"												\
-		"if itest ${update_flag} == 15964 ; then "			\
-			"run factory_reset;" 							\
-			"setenv update_flag 110;" 						\
-			"saveenv ; "									\
-		"fi ;"												\
-		"nand read 0x41000000 fdt ${filesize_fdt} ;" 		\
-		"nand read 0x42000000 kernel ${filesize_kernel} ; "	\
-		"bootm 0x42000000 - 0x41000000\0"
+	"nand_boot="														\
+		"if test ${boot_status} = normal ; then "						\
+		"ubi part root ; "												\
+		"ubi read 0x42000000 kernel_${image} ; "						\
+		"bootm 0x42000000 - 0x42400000 ;" 								\
+		"else "															\
+		"setenv bootargs console=ttyAPP4,115200 usbcore.autosuspend=-1 "\
+			"rootfstype=ubifs ubi.mtd=1 root=ubi0:rootfs_${image} "		\
+			"rw mtdparts=gpmi-nand:5m(bootloader),-(root); "									\
+		"setenv boot_status normal; "									\
+		"saveenv; "														\
+		"reset; "														\
+		"fi\0"							 								\
+	"factory_reset="													\
+		"ubi part root ; "												\
+		"ubi remove rootfs_data\0"										\
+	"boot_status=normal\0"												\
+	"image=a"															
 
 /* The rest of the configuration is shared */
 #include <configs/mxs.h>

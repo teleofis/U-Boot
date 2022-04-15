@@ -28,7 +28,7 @@ DECLARE_GLOBAL_DATA_PTR;
 
 #define	MUX_CONFIG_GPMI	(MXS_PAD_3V3 | MXS_PAD_12MA | MXS_PAD_NOPULL)
 #define MUX_CONFIG_GPIO	(MXS_PAD_3V3 | MXS_PAD_4MA | MXS_PAD_NOPULL)
-
+#define MUX_CONFIG_GPIO18	(MXS_PAD_1V8 | MXS_PAD_4MA | MXS_PAD_NOPULL)
 /*
  * Functions
  */
@@ -55,6 +55,9 @@ int board_early_init_f(void)
 	// USB.VCCEN.D
 	mxs_iomux_setup_pad (MX28_PAD_SAIF1_SDATA0__GPIO_3_26 | MUX_CONFIG_GPIO);
 	gpio_direction_output (MX28_PAD_SAIF1_SDATA0__GPIO_3_26, 0);
+
+	mxs_iomux_setup_pad (MX28_PAD_ENET0_TX_CLK__GPIO_4_5 | MUX_CONFIG_GPIO);
+	gpio_direction_output (MX28_PAD_ENET0_TX_CLK__GPIO_4_5, 1);
 	// USB.VCCEN.C
 	mxs_iomux_setup_pad (MX28_PAD_I2C0_SDA__GPIO_3_25 | MUX_CONFIG_GPIO);
 	gpio_direction_output (MX28_PAD_I2C0_SDA__GPIO_3_25, 0);
@@ -257,9 +260,9 @@ int board_eth_init(bd_t *bis)
 //	gpio_direction_output(MX28_PAD_SSP1_DATA3__GPIO_2_15, 0);
 
 	/* Reset FEC PHYs */
-//	gpio_direction_output(MX28_PAD_ENET0_RX_CLK__GPIO_4_13, 0);
-//	udelay(200);
-//	gpio_set_value(MX28_PAD_ENET0_RX_CLK__GPIO_4_13, 1);
+	gpio_direction_output(MX28_PAD_LCD_VSYNC__GPIO_1_28, 0);
+	udelay(200);
+	gpio_set_value(MX28_PAD_LCD_VSYNC__GPIO_1_28, 1);
 
 	ret = fecmxc_initialize_multi(bis, 0, 0, MXS_ENET0_BASE);
 	if (ret) {
