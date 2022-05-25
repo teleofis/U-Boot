@@ -122,41 +122,41 @@
 #define CONFIG_HOSTNAME		TELEOFISimx287
 
 /* all here ??? */
-#define CONFIG_EXTRA_ENV_SETTINGS			\
-	"mtdparts=mtdparts=gpmi-nand:"			\
-				"5m(bootloader),"			\
-				"-(root)\0"					\
-	"hostname=imx287\0"				\
-	"bootstopkey2=root\0"				\
-	"update_nand_full_filename=u-boot.nand\0"			\
-	"update_nand_stride=0x40\0"	/* MX28 datasheet ch. 12.12 */	\
-	"update_nand_count=0x4\0"	/* MX28 datasheet ch. 12.12 */	\
-	"filesize_rootfs=2000000\0"                                 \
-	"update_nand_get_fcb_size="	/* Get size of FCB blocks */	\
-		"nand device 0 ; "					\
-		"nand info ; "						\
+#define CONFIG_EXTRA_ENV_SETTINGS										\
+	"mtdparts=mtdparts=gpmi-nand:"										\
+				"5m(bootloader),"										\
+				"-(root)\0"												\
+	"hostname=imx287\0"													\
+	"bootstopkey2=root\0"												\
+	"update_nand_full_filename=u-boot.nand\0"							\
+	"update_nand_stride=0x40\0"	/* MX28 datasheet ch. 12.12 */			\
+	"update_nand_count=0x4\0"	/* MX28 datasheet ch. 12.12 */			\
+	"filesize_rootfs=2000000\0"                                 		\
+	"update_nand_get_fcb_size="	/* Get size of FCB blocks */			\
+		"nand device 0 ; "												\
+		"nand info ; "													\
 		"setexpr fcb_sz ${update_nand_stride} * ${update_nand_count};"	\
 		"setexpr update_nand_fcb ${fcb_sz} * ${nand_writesize}\0"		\
-	"fuse_burning="	/* Get size of FCB blocks */	\
-		"fuse prog -y 3 0 04000000 ; "					\
-		"fuse prog -y 3 1 00100000 ; "						\
-		"fuse prog -y 3 7 00100001\0"		\
-	"update_nand_full="		/* Update FCB, DBBT and FW */	\
-		"if tftp ${update_nand_full_filename} ; then "		\
-		"run update_nand_get_fcb_size ; "			\
-		"nand scrub -y 0x0 ${filesize} ; "			\
-		"nand write.raw ${loadaddr} 0x0 ${fcb_sz} ; "		\
-		"setexpr update_off ${loadaddr} + ${update_nand_fcb} ; " \
-		"setexpr update_sz ${filesize} - ${update_nand_fcb} ; " \
-		"nand write ${update_off} ${update_nand_fcb} ${update_sz} ; " \
-		"fi\0"																\
-	"erase_all="		/* Update FCB, DBBT and FW */	\
-		"if tftp zero.img ; then "		\
-		"run update_nand_get_fcb_size ; "			\
-		"nand write ${loadaddr} 0x0 ${filesize} ; "		\
-		"nand write ${loadaddr} 0x4000000 ${filesize} ; "		\
-		"nand write ${loadaddr} 0x8000000 ${filesize} ; "		\
-		"nand write ${loadaddr} 0xBF20000 ${filesize} ; "		\
+	"fuse_burning="	/* Get size of FCB blocks */						\
+		"fuse prog -y 3 0 04000000 ; "									\
+		"fuse prog -y 3 1 00100000 ; "									\
+		"fuse prog -y 3 7 00100001\0"									\
+	"update_nand_full="		/* Update FCB, DBBT and FW */				\
+		"if tftp ${update_nand_full_filename} ; then "					\
+		"run update_nand_get_fcb_size ; "								\
+		"nand scrub -y 0x0 ${filesize} ; "								\
+		"nand write.raw ${loadaddr} 0x0 ${fcb_sz} ; "					\
+		"setexpr update_off ${loadaddr} + ${update_nand_fcb} ; " 		\
+		"setexpr update_sz ${filesize} - ${update_nand_fcb} ; " 		\
+		"nand write ${update_off} ${update_nand_fcb} ${update_sz} ; " 	\
+		"fi\0"															\
+	"erase_all="		/* Update FCB, DBBT and FW */					\
+		"if tftp zero.img ; then "										\
+		"run update_nand_get_fcb_size ; "								\
+		"nand write ${loadaddr} 0x0 ${filesize} ; "						\
+		"nand write ${loadaddr} 0x4000000 ${filesize} ; "				\
+		"nand write ${loadaddr} 0x8000000 ${filesize} ; "				\
+		"nand write ${loadaddr} 0xBF20000 ${filesize} ; "				\
 		"fi\0"															\
 	"update_system="													\
 		"if tftp 0x42000000 root ; then "								\
@@ -166,14 +166,14 @@
 		"ubi part root ; "												\
 		"ubi create kernel_a 0x500000 ; "								\
 		"ubi create kernel_b 0x500000 ; "								\
-		"ubi create rootfs_a 0x2000000 ; "								\
-		"ubi create rootfs_b 0x2000000 ; " 								\
-		"ubi create rootfs_data 0x1E00000 ; "							\
+		"ubi create rootfs_a 0x2A00000 ; "								\
+		"ubi create rootfs_b 0x2A00000 ; " 								\
+		"ubi create rootfs_data 0x2800000 ; "							\
 		"ubi create extra_ubi ; "										\
 		"ubi write 0x42000000 rootfs_a ${filesize_rootfs} ; "			\
 		"ubi write 0x42000000 rootfs_b ${filesize_rootfs} ; "			\
 		"fi ;"															\
-		"if tftp 0x42000000 kernel ; then "					\
+		"if tftp 0x42000000 kernel ; then "								\
 		"setenv filesize_kernel ${filesize} ; "							\
 		"saveenv ; "													\
 		"ubi part root ; "												\
@@ -188,16 +188,17 @@
 		"else "															\
 		"setenv bootargs console=ttyAPP4,115200 usbcore.autosuspend=-1 "\
 			"rootfstype=ubifs ubi.mtd=1 root=ubi0:rootfs_${image} "		\
-			"rw mtdparts=gpmi-nand:5m(bootloader),-(root); "									\
+			"rw mtdparts=gpmi-nand:5m(bootloader),-(root); "			\
 		"setenv boot_status normal; "									\
 		"saveenv; "														\
 		"reset; "														\
 		"fi\0"							 								\
 	"factory_reset="													\
 		"ubi part root ; "												\
-		"ubi remove rootfs_data\0"										\
+		"ubi remove rootfs_data ; "										\
+		"ubi create rootfs_data \0"										\
 	"boot_status=normal\0"												\
-	"image=a"															
+	"image=a"
 
 /* The rest of the configuration is shared */
 #include <configs/mxs.h>
