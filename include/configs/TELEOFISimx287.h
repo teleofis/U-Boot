@@ -161,7 +161,6 @@
 	"update_system="													\
 		"if tftp 0x42000000 root ; then "								\
 		"setenv filesize_rootfs ${filesize} ; "							\
-		"saveenv ; "													\
 		"nand erase.part root ; "										\
 		"ubi part root ; "												\
 		"ubi create kernel_a 0x500000 ; "								\
@@ -180,19 +179,29 @@
 		"ubi write 0x42000000 kernel_a ${filesize_kernel} ; "			\
 		"ubi write 0x42000000 kernel_b ${filesize_kernel} ; "			\
 		"fi\0"															\
-	"nand_boot="														\
-		"if test ${boot_status} = normal ; then "						\
+	"try_boot="															\
 		"ubi part root ; "												\
 		"ubi read 0x42000000 kernel_${image} ; "						\
-		"bootm 0x42000000 - 0x42400000 ;" 								\
-		"else "															\
+		"bootm 0x42000000 - 0x42400000\0" 								\
+	"nand_boot="														\
+		"if test ${boot_status} = upgrade ; then "						\
 		"setenv bootargs console=ttyAPP4,115200 usbcore.autosuspend=-1 "\
 			"rootfstype=ubifs ubi.mtd=1 root=ubi0:rootfs_${image} "		\
 			"rw mtdparts=gpmi-nand:5m(bootloader),-(root); "			\
-		"setenv boot_status normal; "									\
-		"saveenv; "														\
-		"reset; "														\
-		"fi\0"							 								\
+			"setenv boot_status try; "									\
+			"saveenv; "													\
+			"run try_boot ; "											\
+		"fi ; "															\
+		"if test ${boot_status} = try ; then "							\
+			"if test ${image} = a ; then "								\
+				"setenv image b ; "										\
+			"else "														\
+				"setenv image a ; "										\
+			"fi ; "														\
+			"setenv boot_status upgrade ; "								\
+			"boot ; "													\
+		"fi ;"							 								\
+		"run try_boot \0"												\
 	"factory_reset="													\
 		"ubi part root ; "												\
 		"ubi remove rootfs_data ; "										\
