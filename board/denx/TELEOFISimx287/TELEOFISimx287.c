@@ -61,9 +61,6 @@ int board_early_init_f(void)
 	// USB.VCCEN.C
 	mxs_iomux_setup_pad (MX28_PAD_I2C0_SDA__GPIO_3_25 | MUX_CONFIG_GPIO);
 	gpio_direction_output (MX28_PAD_I2C0_SDA__GPIO_3_25, 0);
-	//GSM.PWRKEY
-	mxs_iomux_setup_pad (MX28_PAD_SSP2_MOSI__GPIO_2_17 | MUX_CONFIG_GPIO);
-	gpio_direction_output (MX28_PAD_SSP2_MOSI__GPIO_2_17, 0);
 	//GSM.VCCEN#
 	mxs_iomux_setup_pad (MX28_PAD_SSP2_SS0__GPIO_2_19 | MUX_CONFIG_GPIO);
 	gpio_direction_output (MX28_PAD_SSP2_SS0__GPIO_2_19, 1);
