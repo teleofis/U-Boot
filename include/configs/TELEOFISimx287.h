@@ -182,9 +182,13 @@
 	"try_boot="															\
 		"ubi part root ; "												\
 		"ubi read 0x42000000 kernel_${image} ; "						\
-		"bootm 0x42000000 - 0x42400000\0" 								\
+		"if test \"${full_rs485}\" = true ; then "							\
+			"bootm 0x42000000 - 0x42410000 ; " 							\
+		"else "															\
+			"bootm 0x42000000 - 0x42400000 ; " 							\
+		"fi\0"															\
 	"nand_boot="														\
-		"if test ${boot_status} = upgrade ; then "						\
+		"if test \"${boot_status}\" = upgrade ; then "						\
 		"setenv bootargs console=ttyAPP4,115200 usbcore.autosuspend=-1 "\
 			"rootfstype=ubifs ubi.mtd=1 root=ubi0:rootfs_${image} "		\
 			"rw mtdparts=gpmi-nand:5m(bootloader),-(root); "			\
@@ -192,8 +196,8 @@
 			"saveenv; "													\
 			"run try_boot ; "											\
 		"fi ; "															\
-		"if test ${boot_status} = try ; then "							\
-			"if test ${image} = a ; then "								\
+		"if test \"${boot_status}\" = try ; then "							\
+			"if test \"${image}\" = a ; then "								\
 				"setenv image b ; "										\
 			"else "														\
 				"setenv image a ; "										\
