@@ -65,8 +65,8 @@ int board_early_init_f(void)
 	mxs_iomux_setup_pad (MX28_PAD_SSP2_SS0__GPIO_2_19 | MUX_CONFIG_GPIO);
 	gpio_direction_output (MX28_PAD_SSP2_SS0__GPIO_2_19, 1);
 	//+5V35.OFF
-	mxs_iomux_setup_pad (MX28_PAD_LCD_D14__GPIO_1_14 | MUX_CONFIG_GPIO);
-	gpio_direction_output (MX28_PAD_LCD_D14__GPIO_1_14, 1);
+	// mxs_iomux_setup_pad (MX28_PAD_LCD_D14__GPIO_1_14 | MUX_CONFIG_GPIO);
+	// gpio_direction_output (MX28_PAD_LCD_D14__GPIO_1_14, 1);
 	// USB.VCCEN.C
 	gpio_direction_output (MX28_PAD_I2C0_SDA__GPIO_3_25, 1);
 	/* SSP0 clock at 96MHz */
